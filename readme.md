@@ -86,6 +86,7 @@ Best for:
 3. Layered Guardrails
 Stack multiple guardrails in the middleware=[] array. They get executed in order, building layered protection.
 
+```
 User Input
     ↓
 Layer 1: ContentFilteringMiddleware           <- Deterministic input filtering
@@ -99,4 +100,4 @@ Layer 4: PIIMiddleware (Output)               <- PII redaction of output
 Layer 5: SafetyGuardrailMiddleware            <- Model-based output safety
     ↓
 User Response
-User Response
+```
