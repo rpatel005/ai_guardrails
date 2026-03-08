@@ -73,12 +73,11 @@ Best for:
 - Rate limiting
 - Blocking specific categories of requests
 
-Use before_agent() to validate or block requests before any LLM processing begins.
-
+ Use before_agent() to validate or block requests before any LLM processing begins.
 
 2. After-agent hook (output safety)
-use after_agent() to validate the final agent response before sending it to user.
-Best for:
+   use after_agent() to validate the final agent response before sending it to user.
+   Best for:
 - Model based safety evaluation of output
 - Compliance scanning (e.g. legal, medical, financial disclamers)
 - Quality validation
@@ -88,15 +87,27 @@ Best for:
 Stack multiple guardrails in the middleware=[] array. They get executed in order, building layered protection.
 
 User Input
+
     ↓
+
 Layer 1: ContentFilteringMiddleware   <-  Deterministic input filtering
+
     ↓
+
 Layer 2: PIIMiddleware (input)        <- PII redaction on input
+
     ↓
+
 Layer 3: HumanInTheLoopMiddleware     <- Approval for sensitive tools
+
     ↓
+
 Layer 4: PIIMiddleware (Output)       <- PII redaction of output
+
     ↓
+
 Layer 5: SafetyGuardrailMiddleware    <- MOdel-based output safety
+
     ↓
+
 User Response
