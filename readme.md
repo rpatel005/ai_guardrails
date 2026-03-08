@@ -88,14 +88,15 @@ Stack multiple guardrails in the middleware=[] array. They get executed in order
 
 User Input
     ↓
-Layer 1: ContentFilteringMiddleware   <-  Deterministic input filtering
+Layer 1: ContentFilteringMiddleware           <- Deterministic input filtering
     ↓
-Layer 2: PIIMiddleware (input)        <- PII redaction on input
+Layer 2: PIIMiddleware (input)                <- PII redaction on input
     ↓
-Layer 3: HumanInTheLoopMiddleware     <- Approval for sensitive tools
+Layer 3: HumanInTheLoopMiddleware             <- Approval for sensitive tools
     ↓
-Layer 4: PIIMiddleware (Output)       <- PII redaction of output
+Layer 4: PIIMiddleware (Output)               <- PII redaction of output
     ↓
-Layer 5: SafetyGuardrailMiddleware    <- MOdel-based output safety
+Layer 5: SafetyGuardrailMiddleware            <- Model-based output safety
     ↓
+User Response
 User Response
