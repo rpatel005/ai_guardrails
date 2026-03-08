@@ -40,7 +40,63 @@ Deanonymizers are used to revert the anonymization operation. (e.g. to decrypt a
 > guardrails hub list 
 Installed Validators:
 - RegexMatch
-- DetectPII
+- DetectPII (redact, mask, hash, block)
 - DetectJailbreak
 - ProfanityFree
 - ToxicLanguage
+
+## LangChain guardrails
+# Two approaches: Deterministic and Model based
+1. Deterministic Guardrails
+Rule-based: regex, keyword matching, explicit checks
+Fast, predictable, cost-effective
+May miss nuanced violations
+
+2. Model-based Guardrails
+Uses LLMs/Classifiers for semantic understanding
+Catches subtle/nuanced issues
+Slower and more expensive
+
+## Human-in-the-loop middleware guardrail
+Pause agent execution before sensitive operations and waits for human approval. E.g:
+- Financial transaction
+- Sending emails to external parties
+- Deleting production data
+- Any operation with significant business impact
+Key requirement: A checkpointer for state persistence across interruptions.
+
+## Custom guardrails in langchain
+1. Custom guardrails: Before-agent hook (input filter)
+Best for: 
+- Keyword/content filtering
+- Authentication checks
+- Rate limiting
+- Blocking specific categories of requests
+
+Use before_agent() to validate or block requests before any LLM processing begins.
+
+
+2. After-agent hook (output safety)
+use after_agent() to validate the final agent response before sending it to user.
+Best for:
+- Model based safety evaluation of output
+- Compliance scanning (e.g. legal, medical, financial disclamers)
+- Quality validation
+- Removing sensitive info that leaks through
+
+3. Layered Guardrails
+Stack multiple guardrails in the middleware=[] array. They get executed in order, building layered protection.
+
+User Input
+    ↓
+Layer 1: ContentFilteringMiddleware   <-  Deterministic input filtering
+    ↓
+Layer 2: PIIMiddleware (input)        <- PII redaction on input
+    ↓
+Layer 3: HumanInTheLoopMiddleware     <- Approval for sensitive tools
+    ↓
+Layer 4: PIIMiddleware (Output)       <- PII redaction of output
+    ↓
+Layer 5: SafetyGuardrailMiddleware    <- MOdel-based output safety
+    ↓
+User Response
